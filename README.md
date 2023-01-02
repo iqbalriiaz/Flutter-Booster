@@ -7,8 +7,9 @@ The repository contains code snippet of API implementation in flutter.
 
 [http package](https://pub.dev/packages/http)
 
-## 2. make request to the API ### Custom Http
+## 2. make request to the API
 
+### Custom Http
 ``` dart
 List<Datum> categoriesList = [];
 String apiUrl = "someUrl";
