@@ -7,7 +7,7 @@ The repository contains code snippet of API implementation in flutter.
 
 [http package](https://pub.dev/packages/http)
 
-## 2. make request to the API
+## 2. make request to the API:
 
 ### Custom Http
 ``` dart
@@ -56,4 +56,74 @@ Stream<List<Datum>> fetchCategories() async {
     throw Exception('Failed to load categories');
   }
 }
+```
+## 3. stream can be listened to using a StreamBuilder widget in Flutter:
+
+```dart
+  @override
+  void initState() {
+    fetchCategories();
+    super.initState();
+  }
+```
+```dart
+Scaffold(
+      appBar: AppBar(title: Text("Category")),
+      body: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: StreamBuilder(
+          stream: fetchCategories(),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            }
+            if (snapshot.hasData) {
+              List<Datum> categories = snapshot.data ?? [];
+              return GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 5,
+                    crossAxisSpacing: 10),
+                itemCount: categories.length,
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pushNamed('/subcategory',
+                          arguments: categories[index]);
+                    },
+                    child: Card(
+                      elevation: 10.0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          children: [
+                            Expanded(
+                                flex: 4,
+                                child: Image.network(
+                                  "$imageUrl${categories[index].image}",
+                                  fit: BoxFit.cover,
+                                )),
+                            Spacer(),
+                            Expanded(
+                                flex: 1,
+                                child: Text(
+                                  "${categories[index].name}",
+                                  style: TextStyle(fontSize: 20),
+                                )),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              );
+            }
+            return Center(child: CircularProgressIndicator());
+          },
+        ),
+      ),
+    )
 ```
