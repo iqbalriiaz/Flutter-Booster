@@ -1,15 +1,12 @@
 # Api-Helper
-The repository contains code snippet of API implementation in flutter.
 
-
- 
 ## 1. install http package and import as http:
 
 [http package](https://pub.dev/packages/http)
 
 ## 2. make request to the API:
 
-### Custom Http
+### 2.1 Custom Http
 ``` dart
 List<Datum> categoriesList = [];
 String apiUrl = "someUrl";
@@ -127,4 +124,55 @@ Scaffold(
       ),
     )
 ```
-===========================================================
+==========================================================================================
+==========================================================================================
+
+
+# Date-Time Picker
+
+## Date Picker
+
+Install intl package to format the Date-Time
+[intl package](https://pub.dev/packages/intl)
+
+``` dart
+String? dob;
+
+ void _selectedDate() async {
+    final selectedDate = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(1950),
+        lastDate: DateTime.now());
+    if (selectedDate != null) {
+      setState(() {
+        dob = DateFormat("dd/MM/yyyy").format(selectedDate);
+        
+      });
+    }
+  }
+```
+You can calculate your current age, next-birthday and many more using Age-Calculator package
+[age-calculator package](https://pub.dev/packages/age_calculator/example)
+
+
+``` dart
+  void _selectedDate() async {
+    final selectedDate = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(1950),
+        lastDate: DateTime.now());
+    if (selectedDate != null) {
+      setState(() {
+        dob = DateFormat("dd/MM/yyyy").format(selectedDate);
+        picked_birthday =
+            AgeCalculator.age(selectedDate, today: DateTime.now());
+        next_birthday = AgeCalculator.timeToNextBirthday(selectedDate,
+            fromDate: DateTime.now());
+      });
+    }
+  }
+}
+
+```
