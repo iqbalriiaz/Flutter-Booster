@@ -172,3 +172,137 @@ You can calculate your current age, next-birthday and many more using Age-Calcul
 }
 
 ```
+
+# Fetching post from jsonPlaceHolder api
+
+```dart
+import 'dart:async';
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+
+  StreamController? _postsController;
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
+  // int count = 1;
+
+
+
+  Future fetchPost() async {
+    final response = await http.get(Uri.parse("https://jsonplaceholder.typicode.com/posts"));
+
+
+    if (response.statusCode == 200) {
+      // print(response.runtimeType);
+      // print("response==========${response.body}");
+      List postList = json.decode(response.body);
+      return _postsController!.add(postList);
+
+    } else {
+      throw Exception('Failed to load post');
+    }
+  }
+
+  // loadPosts() async {
+  //   fetchPost().then((value) async {
+  //     _postsController!.add(value);
+  //     // print("value: ==========${value}");
+  //     // print(value.runtimeType);
+  //     return value;
+  //   });
+  //
+  // }
+
+  @override
+  void initState() {
+    _postsController = StreamController();
+    //loadPosts();
+    fetchPost();
+    super.initState();
+  }
+
+
+  // Future<Null> _handleRefresh() async {
+  //   // count++;
+  //   // print(count);
+  //   fetchPost().then((res) async {
+  //     _postsController!.add(res);
+  //     // showSnack();
+  //     return null;
+  //   });
+  // }
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      key: scaffoldKey,
+      appBar: new AppBar(
+        title: new Text('Fetch Post'),
+        // actions: <Widget>[
+        //   IconButton(
+        //     tooltip: 'Refresh',
+        //     icon: Icon(Icons.refresh),
+        //     onPressed: _handleRefresh,
+        //   )
+        // ],
+      ),
+      body: StreamBuilder(
+        stream: _postsController!.stream,
+        builder: (context, snapshot) {
+          // print('Has error: ${snapshot.hasError}');
+          // print('Has data: ${snapshot.hasData}');
+          // print('Snapshot Data ${snapshot.data}');
+
+          // if (snapshot.hasError) {
+          //   return Text(snapshot.error);
+          // }
+
+          if (snapshot.hasData) {
+            return Column(
+              children: <Widget>[
+                Expanded(
+                  child: Scrollbar(
+                    child: ListView.builder(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      itemCount: snapshot.data.length,
+                      itemBuilder: (context, index) {
+                        var post = snapshot.data[index];
+                        return ListTile(
+                          title: Text(post['id'].toString()),
+                          subtitle: Text(post['title']),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            );
+          }
+          return Center(child: CircularProgressIndicator());
+          // if (snapshot.connectionState != ConnectionState.done) {
+          //   return Center(
+          //     child: CircularProgressIndicator(),
+          //   );
+          // }
+          //
+          // if (!snapshot.hasData &&
+          //     snapshot.connectionState == ConnectionState.done) {
+          //   return Text('No Posts');
+          // }
+        },
+
+      ),
+    );
+  }
+}
+```
