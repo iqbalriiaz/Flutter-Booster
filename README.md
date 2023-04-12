@@ -131,7 +131,7 @@ Scaffold(
 static FetchAllSaleRecordData(String? dateFrom, String? dateTo, String? customerId, String? employeeId,
       String? productId, String? userFullName) async {
     String link = "${BaseUrl}api/v1/getSalesRecord";
-    // String basicAuth = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjI0IiwibmFtZSI6IkxpbmsgVXAgQXBpIiwidXNlcnR5cGUiOiJtIiwiaW1hZ2VfbmFtZSI6IjEuanBnIiwiYnJhbmNoIjoiMSJ9.v-zzAx2iYpfsyB-fna8_QHUkQGZpndgpAaYLRSSQ-8k';
+    
     List<SalseRecordModelClass> sales_recordlist = [];
     try {
       SalseRecordModelClass salseRecordModelClass;
