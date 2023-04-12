@@ -124,6 +124,79 @@ Scaffold(
     )
 ```
 
+## Post Method API:
+
+``` dart
+
+static FetchAllSaleRecordData(String? dateFrom, String? dateTo, String? customerId, String? employeeId,
+      String? productId, String? userFullName) async {
+    String link = "${BaseUrl}api/v1/getSalesRecord";
+    // String basicAuth = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjI0IiwibmFtZSI6IkxpbmsgVXAgQXBpIiwidXNlcnR5cGUiOiJtIiwiaW1hZ2VfbmFtZSI6IjEuanBnIiwiYnJhbmNoIjoiMSJ9.v-zzAx2iYpfsyB-fna8_QHUkQGZpndgpAaYLRSSQ-8k';
+    List<SalseRecordModelClass> sales_recordlist = [];
+    try {
+      SalseRecordModelClass salseRecordModelClass;
+      Response response = await Dio().post(link,
+          data: {
+            // "dateFrom": "$dateFrom", "dateTo": "$dateTo"
+            "dateFrom": "$dateFrom",
+            "dateTo": "$dateTo",
+            "customerId": "$customerId",
+            "employeeId": "$employeeId",
+            "productId": "$productId",
+            "userFullName": "$userFullName"
+          },
+          options: Options(headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer ${GetStorage().read("token")}",
+          }));
+      // print(response.data);
+      var item = jsonDecode(response.data);
+      //   print(item);
+      for (var i in item) {
+        salseRecordModelClass = SalseRecordModelClass.fromJson(i);
+        sales_recordlist.add(salseRecordModelClass);
+
+        //   print(sales_recordlist[0].saleDetails![0].productName);
+      }
+    } catch (e) {
+      print(e);
+    }
+    return sales_recordlist;
+  }
+
+```
+
+``` dart
+
+static FetchTotalStock(context) async {
+    List<ModelClass> totalStockList = [];
+    try {
+      String url = "${BaseUrl}api/v1/getTotalStock";
+      ModelClass item;
+
+      Response response = await Dio().post(url,
+          options: Options(headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer ${GetStorage().read("token")}",
+          }));
+
+      var data = jsonDecode(response.data);
+      // print("data===========================${data}");
+      for (var i in data["stock"]) {
+        item = ModelClass.fromJson(i);
+        totalStockList.add(item);
+        // print("item===========================${item}");
+
+        //print("product name:${currentStockList[0].productName} \n");
+      }
+    } catch (e) {
+      print(e);
+    }
+    return totalStockList;
+  }
+
+```
+
 # Date-Time Picker
 
 ## Date Picker
